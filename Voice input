@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Input Example</title>
+</head>
+<body>
+    <h1>Voice Input Example</h1>
+    
+    <button id="startButton">Start Listening</button>
+    <p id="output"></p>
+
+    <script>
+        // Check if the browser supports the SpeechRecognition API
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+            // Set some options for the recognition
+            recognition.lang = 'en-US'; // Set the language
+
+            // Event handler when speech is recognized
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('output').textContent = 'You said: ' + transcript;
+            };
+
+            // Event handler when the recognition is stopped
+            recognition.onend = () => {
+                document.getElementById('startButton').textContent = 'Start Listening';
+            };
+
+            // Event handler for the button click to start/stop listening
+            document.getElementById('startButton').addEventListener('click', () => {
+                if (recognition.start) {
+                    recognition.start();
+                    document.getElementById('startButton').textContent = 'Stop Listening';
+                    document.getElementById('output').textContent = 'Listening...';
+                } else {
+                    document.getElementById('startButton').textContent = 'Start Listening';
+                    recognition.stop();
+                }
+            });
+        } else {
+            document.getElementById('output').textContent = 'Speech recognition not supported in this browser';
+        }
+    </script>
+</body>
+</html>
